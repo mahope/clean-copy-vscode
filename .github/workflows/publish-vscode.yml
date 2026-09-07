@@ -1,0 +1,62 @@
+name: Publish to VS Code Marketplace
+
+# Tag vX.Y.Z (matching package.json "version") -> run tests, package the
+# .vsix, publish to the VS Code Marketplace (publisher "mahope") and, if
+# OVSX_TOKEN is set, to Open VSX. See README.md, "Publishing".
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      OVSX_TOKEN: ${{ secrets.OVSX_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run tests
+        run: npm test
+
+      - name: Version sanity check (package.json == tag, publisher == mahope)
+        run: |
+          VER="$(node -p "require('./package.json').version")"
+          PUB="$(node -p "require('./package.json').publisher")"
+          [ "$PUB" = "mahope" ] || { echo "::error::package.json publisher is '$PUB', expected 'mahope'"; exit 1; }
+          if [ "${GITHUB_EVENT_NAME}" = "push" ] && [ "${GITHUB_REF_NAME}" != "v${VER}" ]; then
+            echo "::error::tag ${GITHUB_REF_NAME} does not match package.json version ${VER} (expected v${VER})"
+            exit 1
+          fi
+          echo "VERSION=${VER}" >> "$GITHUB_ENV"
+
+      - name: Package .vsix
+        run: |
+          npx --yes @vscode/vsce package --out "clean-copy-${VERSION}.vsix"
+          ls -l clean-copy-*.vsix
+
+      - name: Publish to VS Code Marketplace
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: |
+          [ -n "$VSCE_PAT" ] || { echo "::error::VSCE_PAT not set (see README.md, Publishing)"; exit 1; }
+          npx --yes @vscode/vsce publish -p "$VSCE_PAT" --packagePath "clean-copy-${VERSION}.vsix"
+
+      - name: Publish to Open VSX (optional)
+        if: ${{ env.OVSX_TOKEN != '' }}
+        continue-on-error: true
+        run: npx --yes ovsx publish "clean-copy-${VERSION}.vsix" -p "$OVSX_TOKEN"
+
+      - name: Keep the .vsix as a build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: clean-copy-${{ env.VERSION }}.vsix
+          path: clean-copy-*.vsix
