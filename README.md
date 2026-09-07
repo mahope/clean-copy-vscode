@@ -2,7 +2,7 @@
 
 Paste HTML as clean Markdown directly into your editor — no more messy web-page copies with rogue formatting, invisible characters, or junk markup.
 
-Same converter engine as the [Clean Copy Chrome/Firefox extension](https://hermes-passiv.pages.dev/clean-copy).
+Same converter engine as the [Clean Copy Chrome/Firefox extension](https://cleancopy.tools/).
 
 ## Features
 
@@ -78,6 +78,8 @@ npm test
 
 MIT — see [LICENSE](LICENSE).
 
----
+Built on the same converter core as the [Clean Copy](https://cleancopy.tools/) browser extension.
 
-_Built on the same converter core as the [Clean Copy](https://hermes-passiv.pages.dev/clean-copy) browser extension._
+## Author
+
+Built by Mads Holst Jensen — developer and technical partner for small businesses, Odense, Denmark. https://mahoje.dk
