@@ -1,7 +1,7 @@
 name: Publish to VS Code Marketplace
 
 # Tag vX.Y.Z (matching package.json "version") -> run tests, package the
-# .vsix, publish to the VS Code Marketplace (publisher "mahope") and, if
+# .vsix, publish to the VS Code Marketplace (publisher "mahoje") and, if
 # OVSX_TOKEN is set, to Open VSX. See README.md, "Publishing".
 
 on:
@@ -27,11 +27,11 @@ jobs:
       - name: Run tests
         run: npm test
 
-      - name: Version sanity check (package.json == tag, publisher == mahope)
+      - name: Version sanity check (package.json == tag, publisher == mahoje)
         run: |
           VER="$(node -p "require('./package.json').version")"
           PUB="$(node -p "require('./package.json').publisher")"
-          [ "$PUB" = "mahope" ] || { echo "::error::package.json publisher is '$PUB', expected 'mahope'"; exit 1; }
+          [ "$PUB" = "mahoje" ] || { echo "::error::package.json publisher is '$PUB', expected 'mahoje'"; exit 1; }
           if [ "${GITHUB_EVENT_NAME}" = "push" ] && [ "${GITHUB_REF_NAME}" != "v${VER}" ]; then
             echo "::error::tag ${GITHUB_REF_NAME} does not match package.json version ${VER} (expected v${VER})"
             exit 1

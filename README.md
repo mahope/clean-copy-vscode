@@ -71,15 +71,15 @@ git tag v1.0.1 && git push origin main v1.0.1
 
 One-time setup:
 
-1. **Publisher `mahope` must exist** on https://marketplace.visualstudio.com/manage
-   (sign in with a Microsoft account, "Create publisher", ID `mahope`). It does
+1. **Publisher `mahoje` must exist** on https://marketplace.visualstudio.com/manage
+   (sign in with a Microsoft account, "Create publisher", ID `mahoje`). It does
    not exist yet as of 2026-09-07 - `vsce publish` fails until it does.
 2. Repository secrets (Settings -> Secrets and variables -> Actions):
 
 | Secret | Where it comes from |
 |---|---|
 | `VSCE_PAT` | https://dev.azure.com -> User settings -> Personal access tokens -> New token: Organization "All accessible organizations", scope **Marketplace: Manage**, expiry up to 1 year (rotate when it expires) |
-| `OVSX_TOKEN` (optional) | https://open-vsx.org -> sign in with GitHub -> Settings -> Access Tokens. Also create the `mahope` namespace once: `npx ovsx create-namespace mahope -p <token>`. The Open VSX step is skipped when the secret is absent |
+| `OVSX_TOKEN` (optional) | https://open-vsx.org -> sign in with GitHub -> Settings -> Access Tokens. Also create the `mahoje` namespace once: `npx ovsx create-namespace mahoje -p <token>`. The Open VSX step is skipped when the secret is absent |
 
 ## Development
 
